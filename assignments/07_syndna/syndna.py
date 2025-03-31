@@ -7,6 +7,7 @@ Purpose: Create synthetic DNA
 
 import argparse
 import random
+import os
 
 
 # --------------------------------------------------
@@ -92,11 +93,13 @@ def main():
     args = get_args()
     random.seed(args.seed)
 
+    cwd = os.getcwd()
+
     if not 0 < args.pctgc < 1:
-       parser.error(f'--pctgc"{args.pctgc}" must be between 0 and 1')
+       parser.error(f'--pctgc "{float(args.pctgc)}" must be between 0 and 1')
        SystemExit
 
-    if not args.seqtype == ('dna' or 'rna'):
+    if args.seqtype not in ("rna", "dna"):
         parser.error(f'--seqtype"{args.seqtype}" must be dna or rna')
         SystemExit
 
@@ -107,6 +110,8 @@ def main():
         seq = random.sample(pool, k=seq_len)
         seq = ''.join(seq)
         args.outfile.write(f">{i} \n {seq} \n")
+
+    print(f'Done, wrote {args.numseqs} {args.seqtype.upper()} sequences to "{args.outfile.name}".')
 
 # --------------------------------------------------
 if __name__ == '__main__':
